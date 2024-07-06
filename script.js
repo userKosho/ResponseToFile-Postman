@@ -20,6 +20,7 @@ app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 app.get('/', (req, res) => res.send('Hello, I write data to file. Send them requests!'));
 
 app.post('/write', (req, res) => {
+  console.log(req.body);
   let extension = req.body.fileExtension || defaultFileExtension,
     fsMode = req.body.mode || DEFAULT_MODE,
     uniqueIdentifier = req.body.uniqueIdentifier ? typeof req.body.uniqueIdentifier === 'boolean' ? Date.now() : req.body.uniqueIdentifier : false,
@@ -27,7 +28,7 @@ app.post('/write', (req, res) => {
     filePath = `${path.join(folderPath, filename)}.${extension}`,
     options = req.body.options || undefined;
 
-  fs[fsMode](filePath, req.body.responseData, options, (err) => {
+  fs.writeFile(filePath, req.body.responseData, options, (err) => {
     if (err) {
       console.log(err);
       res.send('Error');
